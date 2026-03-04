@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0b1220">
+  <title>🎾 練習メニュー提案</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#121a2b; --card2:#0e1627;
+      --text:#e7eefc; --muted:#a8b3cf; --line:#24304a;
+      --accent:#64d2ff; --good:#34c759; --warn:#ffcc00;
+      --radius:18px;
+      --safeB: env(safe-area-inset-bottom, 0px);
+      --safeT: env(safe-area-inset-top, 0px);
+    }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      background:var(--bg); color:var(--text);
+      padding-bottom: calc(84px + var(--safeB));
+    }
+
+    header{
+      position: sticky; top:0; z-index:10;
+      padding: calc(12px + var(--safeT)) 14px 10px;
+      background: linear-gradient(#0b1220 72%, rgba(11,18,32,0.0));
+      backdrop-filter: blur(8px);
+    }
+    .title{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    h1{ font-size:16px; margin:0; letter-spacing:0.2px; }
+    .sub{ margin-top:6px; font-size:12px; color:var(--muted); }
+
+    .panel{
+      margin-top:10px;
+      background:rgba(18,26,43,0.92);
+      border:1px solid rgba(36,48,74,0.75);
+      border-radius: var(--radius);
+      padding:12px;
+    }
+
+    /* 人数コントロール（大きめ） */
+    .players{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+    }
+    .pbox{ display:flex; align-items:center; gap:10px; }
+    .pill{
+      min-width:52px; height:44px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background:var(--card2);
+      color:var(--text);
+      font-size:18px; font-weight:800;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .btn{
+      width:44px; height:44px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background:var(--card2);
+      color:var(--text);
+      font-size:20px; font-weight:900;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:active{ transform: scale(0.98); }
+
+    .minutes{
+      display:flex; gap:10px; margin-top:10px;
+    }
+    .minutes input{
+      width:100%;
+      height:44px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--card2);
+      color:var(--text);
+      padding:0 12px;
+      font-size:16px;
+    }
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+
+    /* 目的チップ */
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--card2);
+      color:var(--muted);
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.active{
+      background: rgba(100,210,255,0.20);
+      border-color: rgba(100,210,255,0.45);
+      color: var(--text);
+      font-weight:700;
+    }
+
+    main{ padding: 0 14px 18px; }
+
+    .sectionTitle{
+      margin:14px 0 8px;
+      font-size:13px;
+      color: var(--muted);
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .badge{
+      font-size:12px; color:#00101a;
+      background:var(--accent);
+      padding:5px 10px;
+      border-radius:999px;
+      font-weight:800;
+    }
+
+    .grid{ display:grid; gap:10px; }
+
+    .card{
+      background:rgba(18,26,43,0.98);
+      border:1px solid rgba(36,48,74,0.8);
+      border-radius: var(--radius);
+      padding:12px;
+    }
+    .cardTop{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+    .name{ font-size:16px; font-weight:900; line-height:1.2; }
+    .meta{ margin-top:6px; display:flex; gap:6px; flex-wrap:wrap; }
+    .tag{
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: var(--card2);
+      color: var(--muted);
+    }
+    .tag.ok{ border-color: rgba(52,199,89,0.55); color:#c8ffd6; }
+    .tag.warn{ border-color: rgba(255,204,0,0.55); color:#ffe9a6; }
+
+    .desc{ margin-top:8px; font-size:13px; color:var(--muted); line-height:1.55; }
+    details{ margin-top:8px; }
+    summary{ cursor:pointer; color:#cfe6ff; font-weight:800; }
+    .detailBox{ margin-top:8px; padding:10px; border-radius:14px; border:1px solid var(--line); background:var(--card2); }
+    .reason{ font-size:12px; color:#cfe6ff; line-height:1.5; }
+
+    /* 下部固定バー */
+    .bottomBar{
+      position: fixed; left:0; right:0; bottom:0;
+      padding: 10px 12px calc(10px + var(--safeB));
+      background: rgba(11,18,32,0.82);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(36,48,74,0.7);
+      z-index: 20;
+    }
+    .barRow{
+      display:flex; gap:10px;
+    }
+    .action{
+      flex:1;
+      height:52px;
+      border-radius: 16px;
+      border:1px solid rgba(36,48,74,0.9);
+      background: var(--card2);
+      color: var(--text);
+      font-size:15px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .action.primary{
+      border-color: transparent;
+      background: var(--accent);
+      color:#00101a;
+    }
+    .action:active{ transform: scale(0.99); }
+
+    /* メニュー編集（隠し） */
+    .editor{
+      margin-top:12px;
+    }
+    textarea{
+      width:100%;
+      min-height:140px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: #0b1220;
+      color: var(--text);
+      padding:10px;
+      font-size:12px;
+    }
+    .smallBtns{ display:flex; gap:10px; margin-top:8px; }
+    .smallBtns button{ flex:1; height:44px; border-radius:14px; }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="title">
+    <h1>🎾 練習メニュー提案</h1>
+    <span class="badge" id="topBadge">Ready</span>
+  </div>
+  <div class="sub" id="status">人数と目的を選んで「提案」</div>
+
+  <div class="panel">
+    <div class="players">
+      <div>
+        <label>1コートあたりの人数</label>
+        <div class="pbox">
+          <div class="btn" id="minus" aria-label="減らす">−</div>
+          <div class="pill" id="pValue">4</div>
+          <div class="btn" id="plus" aria-label="増やす">+</div>
+        </div>
+      </div>
+      <div style="min-width:130px">
+        <label>時間（分）</label>
+        <input id="minutes" type="number" min="5" max="180" value="15">
+      </div>
+    </div>
+
+    <div style="margin-top:10px">
+      <label>目的（タップで選択）</label>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <details class="editor">
+      <summary>🛠 メニュー編集（JSON）</summary>
+      <div class="desc">メニューを増やすならJSONを編集→保存（この端末に保存）</div>
+      <textarea id="menuJson"></textarea>
+      <div class="smallBtns">
+        <button class="action" id="btnSaveJson">保存</button>
+        <button class="action" id="btnSeed">例に戻す</button>
+      </div>
+    </details>
+  </div>
+</header>
+
+<main>
+  <div class="sectionTitle">
+    <div>⭐ おすすめ（上位3）</div>
+    <div class="tag" id="condTag">—</div>
+  </div>
+  <div class="grid" id="top3"></div>
+
+  <div class="sectionTitle" style="margin-top:16px">
+    <div>候補一覧</div>
+    <div class="tag" id="countTag">—</div>
+  </div>
+  <div class="grid" id="list"></div>
+</main>
+
+<div class="bottomBar">
+  <div class="barRow">
+    <button class="action primary" id="btnSuggest">提案</button>
+    <button class="action" id="btnShuffle">別候補</button>
+    <button class="action" id="btnReset">リセット</button>
+  </div>
+</div>
+
+<script>
+const LS_KEY = "tennis_menu_v2";
+const GOALS = [
+  {key:"any", label:"指定なし"},
+  {key:"basic", label:"基礎"},
+  {key:"rally", label:"ラリー"},
+  {key:"serve", label:"サーブ"},
+  {key:"volley", label:"ボレー"},
+  {key:"game", label:"ゲーム"},
+  {key:"footwork", label:"フットワーク"},
+];
+
+const SEED = [
+  { id:"mini", name:"ミニテニス（サービスライン内）", minP:2, maxP:4, minutes:[8,15],
+    goals:["basic","rally"], intensity:1, setup:"ラケット面とタッチ重視",
+    desc:"ウォームアップに最適。力を抜いて回転とコントロール。",
+  },
+  { id:"cross", name:"クロスラリー（左右）", minP:2, maxP:4, minutes:[10,25],
+    goals:["basic","rally","footwork"], intensity:3, setup:"4人なら交代制（ミスで交代等）",
+    desc:"クロス限定で安定性とフットワーク。目標：20往復/ミス1回以内。",
+  },
+  { id:"switch", name:"クロス→ストレート切替ラリー", minP:2, maxP:4, minutes:[10,25],
+    goals:["rally","basic"], intensity:3, setup:"合図で切替。深さ優先",
+    desc:"配球の切替とコントロール。決め急がず深く返す。",
+  },
+  { id:"serveR", name:"サーブ＆リターン（交代）", minP:2, maxP:6, minutes:[10,30],
+    goals:["serve","game"], intensity:2, setup:"待ちは球拾い→交代。テンポ重視",
+    desc:"コース固定/テーマ付け。リターンは深くセンター返しから。",
+  },
+  { id:"targetS", name:"的当てサーブ（点数制）", minP:1, maxP:6, minutes:[10,25],
+    goals:["serve"], intensity:2, setup:"コーン等を的にして点数制",
+    desc:"狙いを明確化。1st=攻め、2nd=確率など。",
+  },
+  { id:"approach", name:"アプローチ→ボレー→スマッシュ", minP:3, maxP:6, minutes:[10,25],
+    goals:["volley","footwork","game"], intensity:4, setup:"球出し役1。ロブも混ぜる",
+    desc:"前に入る判断とネット連続。相手の足元へ運ぶ。",
+  },
+  { id:"king", name:"キング・オブ・コート（回転）", minP:4, maxP:8, minutes:[10,30],
+    goals:["game","rally"], intensity:4, setup:"勝ち残り。6〜8人はローテ",
+    desc:"ゲーム感覚で集中力UP。5点先取などで回す。",
+  },
+  { id:"ctb", name:"チャンピオンタイブレーク（回転）", minP:4, maxP:10, minutes:[10,25],
+    goals:["game","serve"], intensity:3, setup:"短時間で回す。サーブ1本でも可",
+    desc:"実戦を短時間でたくさん回す。テンポ良く。",
+  },
+  { id:"feed", name:"球出しフットワーク（左右/前後）", minP:2, maxP:6, minutes:[8,20],
+    goals:["footwork","basic"], intensity:5, setup:"本数管理（10球×3等）安全優先",
+    desc:"フォームを維持したまま動く。追い込みすぎ注意。",
+  },
+];
+
+function loadMenu(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return SEED;
+  try { return JSON.parse(raw); } catch(e){ return SEED; }
+}
+function saveMenu(menu){
+  localStorage.setItem(LS_KEY, JSON.stringify(menu, null, 2));
+}
+
+const state = { players:4, minutes:15, goal:"any", lastPick:0 };
+
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
+function scoreMenu(item){
+  const p = state.players, goal = state.goal, minutes = state.minutes;
+  let score = 0; const reasons = [];
+
+  // 人数
+  const okP = (p>=item.minP && p<=item.maxP);
+  if(okP){ score += 55; reasons.push("人数に適合"); }
+  else{
+    const dist = p<item.minP ? item.minP-p : p-item.maxP;
+    score -= 22*dist; reasons.push("人数が適合範囲外");
+  }
+
+  // 目的
+  if(goal==="any"){ score += 10; }
+  else if(item.goals.includes(goal)){ score += 25; reasons.push("目的に合う"); }
+  else { score -= 10; reasons.push("目的とズレ"); }
+
+  // 時間
+  const [minT,maxT] = item.minutes ?? [10,20];
+  if(minutes>=minT && minutes<=maxT){ score += 15; reasons.push("時間にちょうど良い"); }
+  else{
+    const dist = minutes<minT ? minT-minutes : minutes-maxT;
+    score -= Math.min(15, dist); reasons.push("時間がややズレ");
+  }
+
+  // 大人数の回転系を少し優遇
+  if(p>=7 && (item.name.includes("回転") || item.name.includes("キング") || item.name.includes("タイブレ"))){
+    score += 10; reasons.push("大人数でも回しやすい");
+  }
+  // 短時間なら高強度を少し優遇
+  if(minutes<=12 && item.intensity>=4){ score += 5; }
+
+  return {score, reasons, okP};
+}
+
+function intensityBar(n){
+  const filled = "■".repeat(n);
+  const empty = "□".repeat(5-n);
+  return filled+empty;
+}
+
+function renderChips(){
+  const root = document.getElementById("chips");
+  root.innerHTML="";
+  GOALS.forEach(g=>{
+    const el = document.createElement("div");
+    el.className = "chip" + (state.goal===g.key ? " active":"");
+    el.textContent = g.label;
+    el.onclick = ()=>{ state.goal=g.key; renderAll(true); };
+    root.appendChild(el);
+  });
+}
+
+function cardHTML(m, scored, isTop=false){
+  const goalLabels = m.goals.map(k => (GOALS.find(x=>x.key===k)?.label ?? k));
+  const okTag = scored.okP ? `<span class="tag ok">${m.minP}-${m.maxP}人</span>` : `<span class="tag warn">${m.minP}-${m.maxP}人</span>`;
+  return `
+    <div class="card">
+      <div class="cardTop">
+        <div>
+          <div class="name">${isTop ? "⭐ " : ""}${m.name}</div>
+          <div class="meta">
+            ${okTag}
+            <span class="tag">目安 ${m.minutes?.[0] ?? 10}-${m.minutes?.[1] ?? 20}分</span>
+            <span class="tag">強度 ${intensityBar(m.intensity)}</span>
+          </div>
+          <div class="meta">
+            ${goalLabels.map(t=>`<span class="tag">${t}</span>`).join("")}
+          </div>
+        </div>
+        <span class="tag">Score ${scored.score}</span>
+      </div>
+      <div class="desc">${m.desc}</div>
+      <details>
+        <summary>詳細 / 準備</summary>
+        <div class="detailBox">
+          <div class="desc">🧰 準備：${m.setup}</div>
+          <div class="reason">🔎 推奨理由：${scored.reasons.slice(0,3).join(" / ") || "—"}</div>
+        </div>
+      </details>
+    </div>
+  `;
+}
+
+function suggest(shuffle=false){
+  const menu = loadMenu();
+  const scored = menu.map(m=>({m, ...scoreMenu(m)}))
+                    .sort((a,b)=>b.score-a.score);
+
+  // 別候補：同点付近をローテーション（雑に変化を付ける）
+  const candidates = scored.filter(x=>x.score>0);
+  if(candidates.length===0) return {top3:[], list:scored};
+
+  if(shuffle){
+    state.lastPick = (state.lastPick + 1) % Math.min(5, candidates.length);
+  }else{
+    state.lastPick = 0;
+  }
+
+  const top3 = [];
+  // 上位から拾いつつ、lastPickで少しずらす
+  for(let i=0;i<3;i++){
+    const idx = clamp(i + state.lastPick, 0, candidates.length-1);
+    top3.push(candidates[idx]);
+  }
+  return {top3, list:scored};
+}
+
+function renderAll(recompute=false, shuffle=false){
+  state.players = clamp(state.players, 1, 12);
+  state.minutes = clamp(parseInt(document.getElementById("minutes").value||"15",10), 5, 180);
+
+  document.getElementById("pValue").textContent = state.players;
+  document.getElementById("condTag").textContent = `${state.players}人 / ${state.minutes}分 / ${GOALS.find(x=>x.key===state.goal).label}`;
+  renderChips();
+
+  const menu = loadMenu();
+  document.getElementById("menuJson").value = JSON.stringify(menu, null, 2);
+
+  const {top3, list} = suggest(shuffle);
+
+  const top3El = document.getElementById("top3");
+  top3El.innerHTML = top3.length ? top3.map((x,i)=>cardHTML(x.m, x, true)).join("") :
+    `<div class="card"><div class="name">候補がありません</div><div class="desc">人数/目的/時間を変えてみてください。</div></div>`;
+
+  const listEl = document.getElementById("list");
+  listEl.innerHTML = list.map(x=>cardHTML(x.m, x, false)).join("");
+
+  const okCount = list.filter(x=>x.score>0).length;
+  document.getElementById("countTag").textContent = `${okCount}件`;
+  document.getElementById("status").textContent = `条件：${state.players}人/コート・${state.minutes}分・目的「${GOALS.find(x=>x.key===state.goal).label}」`;
+  document.getElementById("topBadge").textContent = top3.length ? "Suggested" : "No match";
+}
+
+document.getElementById("plus").onclick = ()=>{ state.players++; renderAll(true); };
+document.getElementById("minus").onclick = ()=>{ state.players--; renderAll(true); };
+
+document.getElementById("btnSuggest").onclick = ()=> renderAll(true,false);
+document.getElementById("btnShuffle").onclick = ()=> renderAll(true,true);
+document.getElementById("btnReset").onclick = ()=>{
+  state.players=4; state.goal="any"; document.getElementById("minutes").value=15;
+  renderAll(true,false);
+};
+
+document.getElementById("btnSaveJson").onclick = ()=>{
+  try{
+    const v = JSON.parse(document.getElementById("menuJson").value);
+    if(!Array.isArray(v)) throw new Error("配列ではありません");
+    saveMenu(v);
+    alert("保存しました（この端末に保存）");
+    renderAll(true,false);
+  }catch(e){
+    alert("JSONが不正です： " + e.message);
+  }
+};
+document.getElementById("btnSeed").onclick = ()=>{
+  saveMenu(SEED);
+  alert("例に戻しました");
+  renderAll(true,false);
+};
+
+// 初期
+renderAll(true,false);
+</script>
+</body>
+</html>
