@@ -8,28 +8,35 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>🎾 テニス練習メニュー提案</title>
   <style>
-    :root{
-      --bg:#0b1220; --card:#121a2b; --card2:#0e1627;
-      --text:#e7eefc; --muted:#a8b3cf; --line:#24304a;
-      --accent:#64d2ff; --ok:#34c759; --warn:#ffcc00;
-      --r:18px;
+        :root{
+      --bg: #101624;
+      --card: #181f2e;
+      --card2: #151b28;
+      --text: #e7eefc;
+      --muted: #a8b3cf;
+      --line: #24304a;
+      --accent: #64d2ff;
+      --ok: #34c759;
+      --warn: #ffcc00;
+      --r: 18px;
       --safeB: env(safe-area-inset-bottom, 0px);
       --safeT: env(safe-area-inset-top, 0px);
-    }
+        }
     *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     html,body{ height:100%; }
     body{
       margin:0;
       font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
       background:var(--bg); color:var(--text);
-      font-size:14px; /* ← iPhoneで少し小さめ */
+      font-size:16px;
       padding-bottom: calc(84px + var(--safeB));
+      min-height: 100vh;
     }
 
     header{
       position: sticky; top:0; z-index:10;
       padding: calc(12px + var(--safeT)) 14px 10px;
-      background: linear-gradient(#0b1220 72%, rgba(11,18,32,0.0));
+      background: linear-gradient(var(--bg) 80%, rgba(16,22,36,0.0));
       backdrop-filter: blur(10px);
     }
 
@@ -45,7 +52,7 @@
     }
     .toggleBtn:active{ transform: scale(0.98); }
 >>>>>>>>> Temporary merge branch 2
-    h1{ font-size:15px; margin:0; letter-spacing:0.2px; }
+    h1{ font-size:1.2rem; margin:0; letter-spacing:0.2px; }
     .badge{
       font-size:11px; font-weight:900;
       color:#00101a; background:var(--accent);
@@ -56,10 +63,11 @@
 
     .panel{
       margin-top:10px;
-      background: rgba(18,26,43,0.92);
+      background: rgba(24,31,46,0.97);
       border:1px solid rgba(36,48,74,0.75);
       border-radius: var(--r);
-      padding:12px;
+      padding:16px 10px 12px 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
     }
 
     label{ display:block; font-size:11px; color:var(--muted); margin:0 0 6px; }
@@ -68,70 +76,73 @@
     .players{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pbox{ display:flex; align-items:center; gap:10px; }
     .btn{
-      width:42px; height:42px;
-      border-radius: 14px;
+      width:48px; height:48px;
+      border-radius: 16px;
       border:1px solid var(--line);
       background:var(--card2);
       color:var(--text);
-      font-size:18px; font-weight:900;
+      font-size:22px; font-weight:900;
       display:flex; align-items:center; justify-content:center;
       user-select:none; cursor:pointer;
+      transition: background 0.2s, transform 0.1s;
     }
     .btn:active{ transform: scale(0.98); }
     .pill{
-      min-width:50px; height:42px;
-      border-radius: 14px;
+      min-width:54px; height:48px;
+      border-radius: 16px;
       border:1px solid var(--line);
       background:var(--card2);
       color:var(--text);
-      font-size:17px; font-weight:900;
+      font-size:20px; font-weight:900;
       display:flex; align-items:center; justify-content:center;
     }
 
     /* 時間 */
     .minutes{ min-width:140px; }
     .minutes input{
-      width:100%; height:42px;
-      border-radius:14px;
+      width:100%; height:48px;
+      border-radius:16px;
       border:1px solid var(--line);
       background:var(--card2);
       color:var(--text);
-      padding:0 12px;
-      font-size:15px;
+      padding:0 14px;
+      font-size:18px;
     }
     .quick{ display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
     .qbtn{
-      padding:7px 10px;
+      padding:10px 16px;
       border-radius:999px;
       border:1px solid var(--line);
       background:var(--card2);
       color:var(--muted);
-      font-size:12px;
+      font-size:15px;
       cursor:pointer;
       user-select:none;
+      transition: background 0.2s, transform 0.1s;
     }
     .qbtn:active{ transform: scale(0.99); }
 
     /* 目的チップ */
     .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
     .chip{
-      padding:8px 11px;
+      padding:10px 16px;
       border-radius:999px;
       border:1px solid var(--line);
       background:var(--card2);
       color:var(--muted);
-      font-size:12px;
+      font-size:15px;
       cursor:pointer;
       user-select:none;
+      transition: background 0.2s, transform 0.1s;
     }
     .chip.active{
-      background: rgba(100,210,255,0.18);
-      border-color: rgba(100,210,255,0.45);
+      background: rgba(100,210,255,0.22);
+      border-color: rgba(100,210,255,0.55);
       color: var(--text);
       font-weight:800;
     }
 
-    main{ padding: 0 14px 18px; }
+    main{ padding: 0 8px 18px; }
 
     .sectionTitle{
       margin:14px 0 8px;
@@ -155,16 +166,17 @@
     .grid{ display:grid; gap:10px; }
 
     .card{
-      background: rgba(18,26,43,0.98);
+      background: rgba(24,31,46,0.99);
       border:1px solid rgba(36,48,74,0.8);
       border-radius: var(--r);
-      padding:12px;
+      padding:16px 10px 12px 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
     }
     .cardTop{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
-    .name{ font-size:15px; font-weight:900; line-height:1.2; }
+    .name{ font-size:1.1rem; font-weight:900; line-height:1.2; }
     .meta{ margin-top:6px; display:flex; gap:6px; flex-wrap:wrap; }
 
-    .desc{ margin-top:8px; font-size:12px; color:var(--muted); line-height:1.55; }
+    .desc{ margin-top:8px; font-size:14px; color:var(--muted); line-height:1.55; }
 
     details{ margin-top:8px; }
     summary{ cursor:pointer; color:#cfe6ff; font-weight:900; font-size:12px; }
@@ -174,8 +186,8 @@
     /* 下部固定バー */
     .bottomBar{
       position: fixed; left:0; right:0; bottom:0;
-      padding: 10px 12px calc(10px + var(--safeB));
-      background: rgba(11,18,32,0.82);
+      padding: 10px 8px calc(10px + var(--safeB));
+      background: rgba(16,22,36,0.92);
       backdrop-filter: blur(12px);
       border-top: 1px solid rgba(36,48,74,0.7);
       z-index: 20;
@@ -183,14 +195,15 @@
     .barRow{ display:flex; gap:10px; }
     .action{
       flex:1;
-      height:50px;
-      border-radius: 16px;
+      height:54px;
+      border-radius: 18px;
       border:1px solid rgba(36,48,74,0.9);
       background: var(--card2);
       color: var(--text);
-      font-size:14px;
+      font-size:17px;
       font-weight:900;
       cursor:pointer;
+      transition: background 0.2s, transform 0.1s;
     }
     .action.primary{
       border-color: transparent;
@@ -204,13 +217,45 @@
     textarea{
       width:100%;
       min-height:140px;
-      border-radius:14px;
+      border-radius:16px;
       border:1px solid var(--line);
-      background: #0b1220;
+      background: #181f2e;
       color: var(--text);
-      padding:10px;
-      font-size:12px;
+      padding:12px;
+      font-size:15px;
     }
+        /* スマホ向けレスポンシブ */
+        @media (max-width: 600px) {
+          body {
+            font-size: 15px;
+          }
+          header, main {
+            padding-left: 2px;
+            padding-right: 2px;
+          }
+          .panel, .card {
+            padding-left: 4px;
+            padding-right: 4px;
+          }
+          .btn, .pill, .minutes input {
+            font-size: 18px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 12px;
+          }
+          .action {
+            font-size: 15px;
+            height: 48px;
+            border-radius: 14px;
+          }
+          .chip, .qbtn {
+            font-size: 13px;
+            padding: 8px 10px;
+          }
+          .desc {
+            font-size: 13px;
+          }
+        }
     .smallBtns{ display:flex; gap:10px; margin-top:8px; }
     .smallBtns button{ flex:1; height:44px; border-radius:14px; }
 
