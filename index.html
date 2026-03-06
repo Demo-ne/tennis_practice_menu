@@ -9,7 +9,7 @@
   <title>🎾 テニス練習メニュー提案</title>
   <style>
     :root{
-      --bg:#2a2a3a; --card:#121a2b; --card2:#0e1627;
+      --bg:#0b1220; --card:#121a2b; --card2:#0e1627;
       --text:#e7eefc; --muted:#a8b3cf; --line:#24304a;
       --accent:#64d2ff; --ok:#34c759; --warn:#ffcc00;
       --r:18px;
@@ -34,6 +34,8 @@
     }
 
     .title{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+<<<<<<<<< Temporary merge branch 1
+=========
     .toggleBtn{
       font-size:12px; font-weight:900;
       color:#00101a; background:var(--accent);
@@ -42,7 +44,7 @@
       white-space:nowrap;
     }
     .toggleBtn:active{ transform: scale(0.98); }
->>>>>>> 3f2a0352d98e49471a62d6bfaadd482572a568fe
+>>>>>>>>> Temporary merge branch 2
     h1{ font-size:15px; margin:0; letter-spacing:0.2px; }
     .badge{
       font-size:11px; font-weight:900;
@@ -227,10 +229,14 @@
 <header>
   <div class="title">
     <h1>🎾 テニス練習メニュー提案</h1>
+<<<<<<<<< Temporary merge branch 1
+    <span class="badge" id="topBadge">Ready</span>
+=========
     <div style="display:flex; align-items:center; gap:10px;">
       <button class="toggleBtn" id="togglePanel">隠す</button>
       <span class="badge" id="topBadge">Ready</span>
     </div>
+>>>>>>>>> Temporary merge branch 2
   </div>
   <div class="sub" id="status">人数と目的を選んで「提案」</div>
 
@@ -552,6 +558,8 @@
 
   // 初期描画
   renderAll(false);
+<<<<<<<<< Temporary merge branch 1
+=========
 
   // パネルトグル
   let panelVisible = true;
@@ -561,6 +569,7 @@
     panel.style.display = panelVisible ? "block" : "none";
     $("togglePanel").textContent = panelVisible ? "隠す" : "表示";
   });
+>>>>>>>>> Temporary merge branch 2
 })();
 </script>
 
